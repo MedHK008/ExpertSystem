@@ -5,7 +5,7 @@ def process_zone_accident(data: json) -> List[dict]:
     accidents = [
         {
             "zoneId": accident["zoneId"],
-            "accidents": accident["accidents"]
+            "accidents": accident["accidents"]+20
         }
         for accident in data.get("zones", [])
         if accident["accidents"] > 0

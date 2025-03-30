@@ -1,3 +1,10 @@
+from pymongo import MongoClient
+
+client = MongoClient("mongodb://localhost:27017/")
+db = client["geofencingDB"]
+rules_collection = db["rules"]
+
+
 def preprocess_data(data):
     result = []
     # Preprocess weather data once as it's the same for all zones
@@ -43,3 +50,64 @@ def preprocess_data(data):
             "accidents": max_accident
         })
     return result
+
+def preprocess_fact(fact):
+    variable_mapping = {
+        "population": "Population",
+        "accidents": "Accidents",
+        "weather_appartenance_wind": "Vent",
+        "weather_appartenance_rain": "Précipitation",
+        "people": "Densité",
+        "zone_risc_riscP": "Sensibilité"
+    }
+    
+    value_mapping = {
+        "tres_elevee": "tres_Élevé",
+        "elevee": "Élevé",
+        "moyenne": "Moyen",
+        "faible": "Faible",
+        "None": None
+    }
+    
+    processed = {}
+    for fact_key, fact_value in fact.items():
+        if fact_key in variable_mapping:
+            rule_var = variable_mapping[fact_key]
+            processed[rule_var] = value_mapping.get(fact_value, fact_value)
+    return processed
+
+def evaluate_condition(condition, fact):
+    if "operator" in condition:
+        operator = condition["operator"]
+        items = condition["items"]
+        if operator == "AND":
+            return all(evaluate_condition(item, fact) for item in items)
+        elif operator == "OR":
+            return any(evaluate_condition(item, fact) for item in items)
+    else:
+        variable = condition["variable"]
+        value = condition["value"]
+        return fact.get(variable) == value
+
+def infer_risk(processed_fact):
+    triggered_risks = []
+    for rule in rules_collection.find():
+        if evaluate_condition(rule["conditions"], processed_fact):
+            triggered_risks.append(rule["conclusion"]["Risque"])
+    
+    risk_order = ["Élevé", "Moyen", "Faible"]
+    for risk in risk_order:
+        if risk in triggered_risks:
+            return risk
+    return "Inconnu"
+
+def infer_risk_from_facts(facts):
+    results = []
+    for fact in facts:
+        processed_fact = preprocess_fact(fact)
+        risk = infer_risk(processed_fact)
+        results.append({
+            "zoneId": fact["zoneId"],
+            "risk": risk
+        })
+    return results

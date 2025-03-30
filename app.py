@@ -8,7 +8,7 @@ from livePopulation import process_live_people
 from zoneRisc import processZoneRisc
 from weather import process_weather_data
 from accidents import process_zone_accident
-from inferenceSystem import preprocess_data
+from inferenceSystem import preprocess_data, infer_risk_from_facts
 
 app = FastAPI()
 
@@ -64,7 +64,9 @@ async def receive_zone_ids(zone_ids: ZoneIds):
     async with httpx.AsyncClient() as client:
         response = await client.get("http://localhost:8090/api/weather")
         response_data = response.json()
+    # print("weather_data", response_data)
     weather = process_weather_data(response_data)
+    # print("weather", weather)
     
     # fifth service, get the accidents data
     async with httpx.AsyncClient() as client:
@@ -85,4 +87,9 @@ async def receive_zone_ids(zone_ids: ZoneIds):
     }
     # print("aggregated_data", aggregated_data)
     data = preprocess_data(aggregated_data)
-    return {"data": data}
+    
+    print("data", data)
+    
+    # Perform inference using the preprocessed data
+    risks = infer_risk_from_facts(data)
+    return {"risks": risks}

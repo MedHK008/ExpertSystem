@@ -9,7 +9,6 @@ def process_weather_data(weather_data: json) -> List[dict]:
     rain = precipitation["rain"]
     snow = precipitation["snow"]
 
-    # Calculer l'appartenance pour la vitesse du vent et la précipitation
     appartenance_vitesse = vent_appartient(wind_speed)
     appartenance_rain = rain_appartient(rain)
     appartenance_snow = snow_appartient(snow)
