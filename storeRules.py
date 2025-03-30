@@ -52,26 +52,32 @@ def parse_condition(condition_str):
     
     # Base case: simple condition
     var_value = re.split(r'\s*=\s*', condition_str, 1)
-    return {"variable": var_value[0].strip(), "value": var_value[1].strip()}
+    if len(var_value) != 2:  # Handle malformed conditions
+        raise ValueError(f"Malformed condition: {condition_str}")
+    variable_part = var_value[0].strip()
+    variable = variable_part.split('.')[-1]  # Extract variable after '.'
+    value = map_condition_value(var_value[1].strip())
+    return {"variable": variable, "value": value}
 
 
 def parse_rule(rule_text, rule_number):
     try:
-        # Split SI and ALORS parts
         if 'ALORS' not in rule_text:
             raise ValueError("Missing 'ALORS' in rule text")
         si_part, alors_part = re.split(r'\s*ALORS\s*', rule_text, 1, flags=re.IGNORECASE)
         
-        # Clean SI condition
+        # Remove only the leading "SI" keyword
         si_condition = re.sub(r'^SI\s*', '', si_part, flags=re.IGNORECASE).strip()
-        si_condition = re.split(r'\s*\(.*?\)\s*$', si_condition)[0]  # Remove trailing comments
         
-        # Clean ALORS conclusion
-        alors_conclusion = alors_part.split('(')[0].strip()
+        # DO NOT remove parentheses - this was causing malformed conditions
+        # si_condition = re.sub(r'\s*\(.*?\)\s*$', '', si_condition)  # REMOVE THIS LINE
+        
+        # Rest of the function remains unchanged
+        alors_conclusion = alors_part.strip()
         risk_match = re.search(r'Risque\s*=\s*(\w+)', alors_conclusion, re.IGNORECASE)
         if not risk_match:
             raise ValueError("Risk level not found in conclusion")
-        risk_level = risk_match.group(1).capitalize()
+        risk_level = map_condition_value(risk_match.group(1))  # Normalize risk level
         
         return {
             "rule_number": rule_number,
@@ -79,7 +85,19 @@ def parse_rule(rule_text, rule_number):
             "conclusion": {"Risque": risk_level}
         }
     except Exception as e:
-        raise ValueError(f"Error parsing rule: {str(e)}")
+        raise ValueError(f"Error parsing rule {rule_number}: {str(e)}")
+
+def map_condition_value(raw_value):
+    value_mapping = {
+        "elevee": "Élevé",
+        "elevée": "Élevé",
+        "tres_elevee": "Élevé",  # Map all variations to Élevé
+        "moyenne": "Moyen",
+        "faible": "Faible",
+        "none": None
+    }
+    raw_lower = raw_value.lower().strip()
+    return value_mapping.get(raw_lower, raw_value)
 
 def load_rules_to_mongodb(file_path):
     client = MongoClient("mongodb://localhost:27017/")

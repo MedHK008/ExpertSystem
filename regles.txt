@@ -1,142 +1,90 @@
-Règle 1 :
-SI Vent = Fort ET Précipitation = Fort ET Accidents = Élevé
-ALORS Risque = Élevé
-Règle 2 :
-SI Vent = Fort ET Précipitation = Fort ET (Population = Élevé OU Densité = Élevé)
-ALORS Risque = Élevé
-Règle 3 :
-SI Accidents = Élevé ET Sensibilité = Élevé
-ALORS Risque = Élevé
-Règle 4 :
-SI Vent = Moyen ET Précipitation = Moyen ET Accidents = Moyen ET Population = Élevé
-ALORS Risque = Moyen
-Règle 5 :
-SI Vent = Faible ET Précipitation = Faible ET Accidents = Faible ET Sensibilité = Faible
+Règle 1:
+SI Vent = Elevee ET (Rain = Elevee OU Snow = Elevee) ET Accidents = Elevee
+ALORS Risque = Elevee
+Règle 2:
+SI Vent = Elevee ET (Rain = Elevee OU Snow = Elevee) ET (liveDensity = Elevee OU population = Elevee)
+ALORS Risque = Elevee
+Règle 3:
+SI Accidents = Elevee ET (sensibilityP = Elevee OU sensibilityC = Elevee)
+ALORS Risque = Elevee
+Règle 4:
+SI Vent = Moyenne ET Rain = Moyenne ET Accidents = Moyenne ET liveDensity = Elevee
+ALORS Risque = Moyenne
+Règle 5:
+SI Vent = Faible ET Rain = Faible ET Snow = Faible ET Accidents = Faible ET (sensibilityP = Faible OU sensibilityC = Faible)
 ALORS Risque = Faible
-Règle 6 :
-SI Population = Élevé ET Densité = Élevé ET Sensibilité = Élevé
-ALORS Risque = Élevé (même sans vent ou précipitation forte, car la zone est très vulnérable)
-Règle 7 :
-SI Vent = Fort OU Précipitation = Fort ET Accidents = Moyen
-ALORS Risque = Moyen
-Règle 8 :
-SI Vent = Faible ET Précipitation = Faible ET Population = Faible ET Densité = Faible
+Règle 6:
+SI liveDensity = Elevee ET population = Elevee ET (sensibilityP = Elevee OU sensibilityC = Elevee)
+ALORS Risque = Elevee
+Règle 7:
+SI (Vent = Elevee OU Rain = Elevee) ET Accidents = Moyenne
+ALORS Risque = Moyenne
+Règle 8:
+SI Vent = Faible ET Rain = Faible ET liveDensity = Faible ET population = Faible
 ALORS Risque = Faible
-Règle 9 :
-SI Accidents = Moyen ET Sensibilité = Moyen ET (Vent = Moyen OU Précipitation = Moyen)
-ALORS Risque = Moyen
-Règle 10 :
-SI TOUS les facteurs = Faible
+Règle 9:
+SI Accidents = Moyenne ET (sensibilityP = Moyenne OU sensibilityC = Moyenne) ET (Vent = Moyenne OU Rain = Moyenne)
+ALORS Risque = Moyenne
+Règle 10:
+SI Vent = Faible ET Rain = Faible ET Snow = None ET Accidents = Faible ET liveDensity = Faible ET population = Faible ET Traffic = Faible
 ALORS Risque = Faible
-Règle 11 :
-SI Vent = Fort ET Précipitation = Moyen ET Sensibilité = Élevé
-ALORS Risque = Élevé
-(Conditions météo aggravantes avec une zone sensible augmentent le risque.)
-Règle 12 :
-SI Accidents = Moyen ET Population = Élevé ET Densité = Élevé
-ALORS Risque = Élevé
-(Une zone dense et peuplée avec un historique d’accidents moyens est risquée.)
-Règle 13 :
-SI Vent = Moyen ET Précipitation = Moyen ET Sensibilité = Moyen
-ALORS Risque = Moyen
-(Conditions météo modérées dans une zone moyennement sensible.)
-Règle 14 :
-SI Accidents = Faible ET Population = Élevé ET Sensibilité = Élevé
-ALORS Risque = Moyen
-(Même avec peu d’accidents, une population importante et une sensibilité élevée posent un risque modéré.)
-Règle 15 :
-SI Vent = Fort ET Précipitation = Faible ET Accidents = Faible
-ALORS Risque = Moyen
-(Vent fort seul peut poser un risque modéré, même sans autres facteurs aggravants.)
-Règle 16 :
-SI Densité = Élevé ET Population = Moyen ET Sensibilité = Moyen
-ALORS Risque = Moyen
-(Une densité élevée dans une zone modérément sensible et peuplée.)
-Règle 17 :
-SI Vent = Moyen ET Précipitation = Fort ET Accidents = Faible
-ALORS Risque = Moyen
-(Précipitation forte avec vent moyen, mais sans accidents significatifs.)
-Règle 18 :
-SI Accidents = Élevé ET Population = Faible ET Densité = Faible
-ALORS Risque = Moyen
-(Un taux élevé d’accidents dans une zone peu dense ou peuplée reste un risque modéré.)
-Règle 19 :
-SI Sensibilité = Élevé ET (Vent = Moyen OU Précipitation = Moyen) ET Accidents = Faible
-ALORS Risque = Moyen
-(Sensibilité élevée avec des conditions météo modérées.)
-Règle 20 :
-SI Vent = Faible ET Précipitation = Faible ET Sensibilité = Moyen ET Population = Moyen
+Règle 11:
+SI Vent = Elevee ET Rain = Moyenne ET (sensibilityP = Elevee OU sensibilityC = Elevee)
+ALORS Risque = Elevee
+Règle 12:
+SI Accidents = Moyenne ET liveDensity = Elevee ET population = Elevee
+ALORS Risque = Elevee
+Règle 13:
+SI Vent = Moyenne ET Rain = Moyenne ET (sensibilityP = Moyenne OU sensibilityC = Moyenne)
+ALORS Risque = Moyenne
+Règle 14:
+SI Accidents = Faible ET liveDensity = Elevee ET (sensibilityP = Elevee OU sensibilityC = Elevee)
+ALORS Risque = Moyenne
+Règle 15:
+SI Vent = Elevee ET Rain = Faible ET Accidents = Faible
+ALORS Risque = Moyenne
+Règle 16:
+SI population = Elevee ET liveDensity = Moyenne ET (sensibilityP = Moyenne OU sensibilityC = Moyenne)
+ALORS Risque = Moyenne
+Règle 17:
+SI Vent = Moyenne ET Rain = Elevee ET Accidents = Faible
+ALORS Risque = Moyenne
+Règle 18:
+SI Accidents = Elevee ET liveDensity = Faible ET population = Faible
+ALORS Risque = Moyenne
+Règle 19:
+SI (sensibilityP = Elevee OU sensibilityC = Elevee) ET (Vent = Moyenne OU Rain = Moyenne) ET Accidents = Faible
+ALORS Risque = Moyenne
+Règle 20:
+SI Vent = Faible ET Rain = Faible ET (sensibilityP = Moyenne OU sensibilityC = Moyenne) ET liveDensity = Moyenne
 ALORS Risque = Faible
-(Conditions météo faibles et facteurs humains modérés maintiennent un risque faible.)
-Règle 21 :
-SI Température = Fort ET Vent = Fort ET Population = Élevé
-ALORS Risque = Élevé
-(Température forte et vent fort dans une zone très peuplée, par exemple risque d’incendie ou de stress thermique.)
-Règle 22 :
-SI Température = Fort ET Précipitation = Faible ET Sensibilité = Élevé
-ALORS Risque = Élevé
-(Température forte avec peu de précipitation dans une zone sensible, comme risque de sécheresse ou incendie.)
-Règle 23 :
-SI Température = Moyen ET Vent = Moyen ET Accidents = Moyen
-ALORS Risque = Moyen
-(Conditions modérées avec un historique d’accidents moyen.)
-Règle 24 :
-SI Température = Fort ET Densité = Élevé ET Population = Élevé
-ALORS Risque = Élevé
-(Température extrême dans une zone dense et peuplée, comme un risque sanitaire ou d’évacuation difficile.)
-Règle 25 :
-SI Température = Faible ET Vent = Faible ET Précipitation = Faible ET Population = Moyen
-ALORS Risque = Faible
-(Conditions tempérées et météo calme avec une population modérée.)
-Règle 26 :
-SI Température = Fort ET Accidents = Élevé ET Précipitation = Moyen
-ALORS Risque = Élevé
-(Température extrême et accidents élevés aggravés par des précipitations modérées.)
-Règle 27 :
-SI Température = Moyen ET Sensibilité = Moyen ET Densité = Moyen
-ALORS Risque = Moyen
-(Conditions tempérées dans une zone modérément vulnérable.)
-Règle 28 :
-SI Température = Faible ET Accidents = Moyen ET Population = Élevé
-ALORS Risque = Moyen
-(Température tempérée, mais population élevée et accidents moyens maintiennent un risque modéré.)
-Règle 29 :
-SI Température = Fort ET Vent = Moyen ET Accidents = Élevé
-ALORS Risque = Élevé
-(Température extrême et accidents élevés avec un vent modéré augmentent le risque.)
-Règle 30 :
-SI Température = Fort ET Précipitation = Fort ET Densité = Élevé
-ALORS Risque = Élevé
-(Conditions météo extrêmes dans une zone dense, comme risque d’inondation ou de chaos.)
-Règle 31 :
-SI Température = Moyen ET Vent = Fort ET Sensibilité = Élevé
-ALORS Risque = Moyen
-(Vent fort dans une zone sensible, avec température modérée, pose un risque modéré.)
-Règle 32 :
-SI Température = Faible ET Précipitation = Moyen ET Population = Élevé
-ALORS Risque = Moyen
-(Précipitation modérée dans une zone très peuplée avec température tempérée.)
-Règle 33 :
-SI Température = Fort ET Accidents = Moyen ET Population = Moyen
-ALORS Risque = Moyen
-(Température extrême avec des accidents modérés dans une population moyenne.)
-Règle 34 :
-SI Température = Moyen ET Vent = Moyen ET Précipitation = Moyen ET Sensibilité = Faible
-ALORS Risque = Moyen
-(Conditions météo modérées dans une zone peu sensible.)
-Règle 35 :
-SI Température = Faible ET Accidents = Faible ET Densité = Élevé
-ALORS Risque = Faible
-(Température tempérée et peu d’accidents, même dans une zone dense.)
-Règle 36 :
-SI Température = Fort ET Vent = Faible ET Précipitation = Faible ET Sensibilité = Élevé
-ALORS Risque = Moyen
-(Température extrême dans une zone sensible, malgré des conditions météo calmes.)
-Règle 37 :
-SI Température = Moyen ET Accidents = Élevé ET Densité = Moyen
-ALORS Risque = Élevé
-(Accidents élevés avec température modérée dans une zone moyennement dense.)
-Règle 38 :
-SI Température = Faible ET Vent = Moyen ET Précipitation = Faible ET Population = Faible
-ALORS Risque = Faible
-(Conditions globalement calmes avec une faible population.)
+Règle 21:
+SI Snow = Elevee ET Traffic = Elevee
+ALORS Risque = Elevee
+Règle 22:
+SI Snow = Moyenne ET Vent = Elevee ET Accidents = Moyenne
+ALORS Risque = Elevee
+Règle 23:
+SI Snow = Faible ET Vent = Faible ET Traffic = Moyenne
+ALORS Risque = Moyenne
+Règle 24:
+SI liveDensity = Tres_Elevee ET Accidents = Tres_Elevee
+ALORS Risque = Elevee
+Règle 25:
+SI Traffic = Tres_Elevee ET Rain = Elevee
+ALORS Risque = Elevee
+Règle 26:
+SI population = Tres_Elevee ET (sensibilityP = Elevee OU sensibilityC = Elevee) ET Accidents = Moyenne
+ALORS Risque = Elevee
+Règle 27:
+SI Traffic = Elevee ET liveDensity = Elevee ET Vent = Moyenne
+ALORS Risque = Moyenne
+Règle 28:
+SI sensibilityC = Elevee ET Accidents = Moyenne ET Rain = Moyenne
+ALORS Risque = Elevee
+Règle 29:
+SI (sensibilityP = Moyenne OU sensibilityC = Moyenne) ET Vent = Faible ET Rain = Faible
+ALORS Risque = Moyenne
+Règle 30:
+SI Accidents = Elevee ET (Rain = Elevee OU Snow = Elevee)
+ALORS Risque = Elevee

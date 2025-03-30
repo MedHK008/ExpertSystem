@@ -24,4 +24,4 @@ def densite_appartient(densite):
     tres_elevee = max(0, min((densite - 5000) / 5000, 1)) if densite >= 5000 else 0  # Plus de 500 habitants/km²
 
     # Retourner les valeurs d'appartenance
-    return {"faible": faible, "moyenne": moyenne, "elevee": elevee, "tres_elevee": tres_elevee}
+    return {"Faible": faible, "Moyen": moyenne, "elevee": elevee, "tres_elevee": tres_elevee}

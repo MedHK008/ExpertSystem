@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 from typing import List
 import httpx
+import json
 from population import processDentisityForZones
 from liveTraffic import process_traffic_data
 from livePopulation import process_live_people
@@ -34,8 +35,10 @@ async def receive_zone_ids(zone_ids: ZoneIds):
             response_data = response.json()
         live_data.append({
             "zoneId": response_data["zoneId"],
+            "cameras": response_data["cameras"],
             "totals": response_data["totals"]
         })
+    # print(json.dumps(live_data,indent=4))
     traffic = process_traffic_data(live_data)
     people = process_live_people(live_data)
     
@@ -80,7 +83,7 @@ async def receive_zone_ids(zone_ids: ZoneIds):
     aggregated_data = {
         "population": population,
         "traffic": traffic,
-        "people": people,
+        "live_density": people,
         "zone_risc": zone_risc,
         "weather": weather,
         "accidents": accidents
@@ -88,7 +91,7 @@ async def receive_zone_ids(zone_ids: ZoneIds):
     # print("aggregated_data", aggregated_data)
     data = preprocess_data(aggregated_data)
     
-    print("data", data)
+    print(json.dumps(data, indent=4))
     
     # Perform inference using the preprocessed data
     risks = infer_risk_from_facts(data)

@@ -28,4 +28,4 @@ def risque_appartient(risque):
     eleve = max(0, min((risque - 0.75) / 0.25, 1)) if risque >= 0.75 else 0  # De 0.75 à 1
 
     # Retourner les valeurs d'appartenance
-    return {"aucun": aucun, "faible": faible, "moyenne": moyenne, "eleve": eleve}
+    return {"aucun": aucun, "Faible": faible, "Moyen": moyenne, "elevee": eleve}

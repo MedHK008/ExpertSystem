@@ -25,6 +25,6 @@ def trafic_appartient(nb_vehicules):
     tres_elevee = max(0, min((nb_vehicules - 14) / 14, 1)) if nb_vehicules >= 14 else 0
 
     # Retourner les valeurs d'appartenance
-    return {"faible": faible, "moyenne": moyenne, "elevee": elevee, "tres_elevee": tres_elevee}
+    return {"Faible": faible, "Moyen": moyenne, "elevee": elevee, "tres_elevee": tres_elevee}
 
 

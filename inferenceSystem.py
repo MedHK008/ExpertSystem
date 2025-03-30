@@ -4,7 +4,6 @@ client = MongoClient("mongodb://localhost:27017/")
 db = client["geofencingDB"]
 rules_collection = db["rules"]
 
-
 def preprocess_data(data):
     result = []
     # Preprocess weather data once as it's the same for all zones
@@ -25,7 +24,7 @@ def preprocess_data(data):
         max_traffic = max(traffic_entry["appartenance"], key=lambda k: traffic_entry["appartenance"][k])
         
         # Process people
-        people_entry = next(p for p in data["people"] if p["zoneId"] == zone_id)
+        people_entry = next(p for p in data["live_density"] if p["zoneId"] == zone_id)
         max_people = max(people_entry["appartenance"], key=lambda k: people_entry["appartenance"][k])
         
         # Process zone_risc
@@ -41,28 +40,31 @@ def preprocess_data(data):
             "zoneId": zone_id,
             "population": max_population,
             "traffic": max_traffic,
-            "people": max_people,
-            "zone_risc_riscP": max_riscP,
-            "zone_risc_riscC": max_riscC,
-            "weather_appartenance_wind": max_wind,
-            "weather_appartenance_rain": max_rain,
-            "weather_appartenance_snow": max_snow,
-            "accidents": max_accident
+            "liveDensity": max_people,
+            "sensibilityP": max_riscP,
+            "sensibilityC": max_riscC,
+            "Vent": max_wind,
+            "Rain": max_rain,
+            "Snow": max_snow,
+            "Accidents": max_accident
         })
     return result
 
 def preprocess_fact(fact):
     variable_mapping = {
-        "population": "Population",
-        "accidents": "Accidents",
-        "weather_appartenance_wind": "Vent",
-        "weather_appartenance_rain": "Précipitation",
-        "people": "Densité",
-        "zone_risc_riscP": "Sensibilité"
+        "population": "population",
+        "traffic": "Traffic",
+        "liveDensity": "liveDensity",
+        "sensibilityP": "sensibilityP",
+        "sensibilityC": "sensibilityC",
+        "Vent": "Vent",
+        "Rain": "Rain",
+        "Snow": "Snow",
+        "Accidents": "Accidents"
     }
     
     value_mapping = {
-        "tres_elevee": "tres_Élevé",
+        "tres_elevee": "Élevé",
         "elevee": "Élevé",
         "moyenne": "Moyen",
         "faible": "Faible",
@@ -73,7 +75,8 @@ def preprocess_fact(fact):
     for fact_key, fact_value in fact.items():
         if fact_key in variable_mapping:
             rule_var = variable_mapping[fact_key]
-            processed[rule_var] = value_mapping.get(fact_value, fact_value)
+            mapped_value = value_mapping.get(fact_value, fact_value)
+            processed[rule_var] = mapped_value
     return processed
 
 def evaluate_condition(condition, fact):
@@ -99,7 +102,7 @@ def infer_risk(processed_fact):
     for risk in risk_order:
         if risk in triggered_risks:
             return risk
-    return "Inconnu"
+    return "None"
 
 def infer_risk_from_facts(facts):
     results = []
