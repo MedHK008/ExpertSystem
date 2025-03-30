@@ -92,4 +92,4 @@ async def receive_zone_ids(zone_ids: ZoneIds):
     
     # Perform inference using the preprocessed data
     risks = infer_risk_from_facts(data)
-    return {"risks": risks}
+    return {"data":data,"risks": risks}

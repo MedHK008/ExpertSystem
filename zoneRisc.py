@@ -5,7 +5,7 @@ def processZoneRisc(zone_data: json) -> List[dict]:
     processed_data = []
     for zone in zone_data:
         zoneId = zone["zoneId"]
-        riscP = zone["riscP"]+0.65
+        riscP = zone["riscP"]
         riscC = zone["riscC"]
 
         # Calculer l'appartenance pour le risque de la population et du trafic
