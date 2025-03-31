@@ -91,8 +91,8 @@ async def receive_zone_ids(zone_ids: ZoneIds):
     # print("aggregated_data", aggregated_data)
     data = preprocess_data(aggregated_data)
     
-    print(json.dumps(data, indent=4))
+    # print(json.dumps(data, indent=4))
     
     # Perform inference using the preprocessed data
     risks = infer_risk_from_facts(data)
-    return {"data":data,"risks": risks}
+    return {"risks": risks}
