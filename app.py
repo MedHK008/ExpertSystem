@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+import uvicorn
 from pydantic import BaseModel
 from typing import List
 import httpx
@@ -28,16 +29,17 @@ async def receive_zone_ids(zone_ids: ZoneIds):
     population = processDentisityForZones(response_data)
     
     # second service, get the live data of the zones
-    live_data = []
-    for zone in zone_ids.zone_ids :
-        async with httpx.AsyncClient() as client:
-            response = await client.post("http://127.0.0.1:9000/get_live_data", json={"zoneId": zone})
-            response_data = response.json()
-        live_data.append({
-            "zoneId": response_data["zoneId"],
-            "cameras": response_data["cameras"],
-            "totals": response_data["totals"]
-        })
+    async with httpx.AsyncClient() as client:
+        response = await client.post("http://127.0.0.1:9000/get_live_data", json={"zone_ids": zone_ids.zone_ids})
+        response_data = response.json()
+    live_data = [
+        {
+            "zoneId": zone["zoneId"],
+            "cameras": zone.get("cameras", {}),  # Use .get() to handle missing keys
+            "totals": zone.get("totals", {})    # Use .get() to handle missing keys
+        }
+        for zone in response_data.get("results", [])
+    ]
     # print(json.dumps(live_data,indent=4))
     traffic = process_traffic_data(live_data)
     people = process_live_people(live_data)
@@ -93,6 +95,9 @@ async def receive_zone_ids(zone_ids: ZoneIds):
     
     # print(json.dumps(data, indent=4))
     
-    # Perform inference using the preprocessed data
     risks = infer_risk_from_facts(data)
-    return {"risks": risks}
+    print("risks", json.dumps(risks, indent=4))
+    return {"risks": risks, "data": data}
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=8001, log_level="info")

@@ -31,12 +31,13 @@ def process_live_people(people_data: json) -> List[dict]:
         for zone in people_data:
             zoneId = zone["zoneId"]
             totals = zone["totals"]
-            nb_personnes = totals["person"]
+            nb_personnes = totals.get("personnes", 20)
             cameras = zone["cameras"]
             areas = calculate_density(cameras)
-            total_area = sum(areas.values()) / 10
+            total_area = sum(areas.values())
             density = nb_personnes / total_area if total_area > 0 else 0
-            personnes_appartenance = personnes_appartient(nb_personnes)
+            print(f"Zone: {zoneId}, Density: {density}, Total Area: {total_area}, Number of People: {nb_personnes}")
+            personnes_appartenance = personnes_appartient(density)
             processed_data.append({
                 "zoneId": zoneId,
                 "live_density": nb_personnes,

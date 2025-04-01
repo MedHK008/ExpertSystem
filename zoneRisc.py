@@ -21,6 +21,10 @@ def processZoneRisc(zone_data: json) -> List[dict]:
     return processed_data
 
 def risque_appartient(risque):
+    # Handle None values
+    if risque is None:
+        return {"aucun": 0, "Faible": 0, "Moyen": 0, "elevee": 0}
+
     # Fonction d'appartenance trapézoïdale pour chaque catégorie de risque
     aucun = max(0, min((0.10 - risque) / 0.10, 1)) if risque <= 0.10 else 0  # De 0 à 0.15
     faible = max(0, min((risque - 0.10) / 0.2, 1, (0.35 - risque) / 0.2))  # De 0.15 à 0.35
