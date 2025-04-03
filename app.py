@@ -96,7 +96,6 @@ async def receive_zone_ids(zone_ids: ZoneIds):
     # print(json.dumps(data, indent=4))
     
     risks = infer_risk_from_facts(data)
-    print("risks", json.dumps(risks, indent=4))
     return {"risks": risks, "data": data}
 
 if __name__ == "__main__":

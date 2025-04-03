@@ -36,7 +36,6 @@ def process_live_people(people_data: json) -> List[dict]:
             areas = calculate_density(cameras)
             total_area = sum(areas.values())
             density = nb_personnes / total_area if total_area > 0 else 0
-            print(f"Zone: {zoneId}, Density: {density}, Total Area: {total_area}, Number of People: {nb_personnes}")
             personnes_appartenance = personnes_appartient(density)
             processed_data.append({
                 "zoneId": zoneId,
